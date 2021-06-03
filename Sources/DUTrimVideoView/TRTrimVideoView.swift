@@ -25,7 +25,7 @@ public class DUTrimVideoView : UIView  {
         ])
     }
     
-    init(asset:AVAsset,frame:CGRect) {
+    public init(asset:AVAsset,frame:CGRect) {
         super.init(frame: frame)
         self.asset = asset
         
@@ -72,10 +72,10 @@ public class DUTrimVideoView : UIView  {
     @objc func rangeSliderValueChanged(_ rangeSlider: DURangeSlider) {
         delegate?.rangeSliderValueChanged(trimView: self, rangeSlider: rangeSlider)
     }
-    required init?(coder: NSCoder) {
+   public  required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func createImageFrames()
+   public func createImageFrames()
     {
       //creating assets
       let assetImgGenerate : AVAssetImageGenerator    = AVAssetImageGenerator(asset: asset)
