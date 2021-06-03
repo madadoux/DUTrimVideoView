@@ -8,10 +8,10 @@
 
 import Foundation
 import AVKit
-protocol VideoTrimViewDelegate {
+public protocol VideoTrimViewDelegate {
     func rangeSliderValueChanged(trimView: DUTrimVideoView, rangeSlider: DURangeSlider)
 }
-class DUTrimVideoView : UIView  {
+public class DUTrimVideoView : UIView  {
     var asset : AVAsset!
     var imageFrameView : UIView!
     var delegate : VideoTrimViewDelegate?
