@@ -251,8 +251,18 @@ public class DURangeSlider: UIControl {
     fileprivate let lowerThumbLayer = TRRangeSliderThumbLayer()
     fileprivate let upperThumbLayer = TRRangeSliderThumbLayer()
     fileprivate let playerPostionLayer = DUPlayerPostionLayer()
-    var thumbWidth: CGFloat! = 15
-    var thumbHeight: CGFloat! = 15
+    public var thumbWidth: CGFloat! = 15
+    {
+        didSet{
+            updateLayerFrames()
+        }
+    }
+    public var thumbHeight: CGFloat! = 15
+    {
+        didSet{
+            updateLayerFrames()
+        }
+    }
 
     override public var frame: CGRect {
         didSet {
