@@ -319,7 +319,6 @@ public class DURangeSlider: UIControl {
     func positionForValue(_ value: Double) -> Double {
          let val =  Double(bounds.width - thumbWidth) * (value - minimumValue) /
             (maximumValue - minimumValue) + Double(thumbWidth/2.0)
-        print(value)
         if  value == minimumValue {
            return val - Double(thumbWidth/2.0)
         }

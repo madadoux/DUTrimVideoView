@@ -14,7 +14,8 @@ public protocol VideoTrimViewDelegate {
 public class DUTrimVideoView : UIView  {
     var asset : AVAsset!
     var imageFrameView : UIView!
-    var delegate : VideoTrimViewDelegate?
+    public var rangeSlider: DURangeSlider!
+    public var delegate : VideoTrimViewDelegate?
     fileprivate func snapToSuperview(_ child: UIView) {
         child.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -42,7 +43,6 @@ public class DUTrimVideoView : UIView  {
         
         
     }
-    var rangeSlider: DURangeSlider!
     func createRangeSlider()
     {
      
@@ -52,8 +52,8 @@ public class DUTrimVideoView : UIView  {
 
       snapToSuperview(rangeSlider)
 
-      rangeSlider.leftThumbImage = UIImage(named: "slider-left")
-      rangeSlider.rightThumbImage = UIImage(named: "slider-right")
+      rangeSlider.leftThumbImage = UIImage(named: "left")
+      rangeSlider.rightThumbImage = UIImage(named: "right")
       rangeSlider.trackBorderTintColor = .white
       rangeSlider.trackBorderWidth = 4.0
       rangeSlider.tag = 1000
@@ -105,6 +105,7 @@ public class DUTrimVideoView : UIView  {
           let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
           let image = UIImage(cgImage: img)
           imageButton.setImage(image, for: .normal)
+          imageButton.imageView?.contentMode = .scaleAspectFit
         }
         catch
           _ as NSError
