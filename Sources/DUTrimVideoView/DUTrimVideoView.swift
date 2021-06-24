@@ -119,13 +119,14 @@ public class DUTrimVideoView : UIView  {
       
       //Range slider action
       rangeSlider.addTarget(self, action: #selector(rangeSliderValueChanged(_:)), for: .valueChanged)
-      
+        self.layoutIfNeeded()
+        self.layoutSubviews()
       let time = DispatchTime.now() + Double(Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
-      DispatchQueue.main.asyncAfter(deadline: time) {
+     // DispatchQueue.main.asyncAfter(deadline: time) {
         self.rangeSlider.trackHighlightTintColor = UIColor.clear
         self.rangeSlider.curvaceousness = 1.0
         self.createImageFrames()
-      }
+      //}
 
     }
     @objc func rangeSliderValueChanged(_ rangeSlider: DURangeSlider) {
