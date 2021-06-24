@@ -10,14 +10,71 @@ import Foundation
 import AVKit
 public protocol VideoTrimViewDelegate {
     func rangeSliderValueChanged(trimView: DUTrimVideoView, rangeSlider: DURangeSlider)
-    func getFrameImages(trimView: DUTrimVideoView , atRange: ClosedRange<Double>) -> [UIImage]
-    func numberOfFrames ( trimView: DUTrimVideoView)-> Int
+    
 }
+public protocol  DUTrimVideoViewViewModel {
+    func getFrameImages(trimView: DUTrimVideoView , atRange: ClosedRange<Double>) -> [UIImage]
+    func  numberOfFrames ( trimView: DUTrimVideoView)-> Int
+
+}
+open class DefaultDUTrimVideoViewViewModel : DUTrimVideoViewViewModel{
+    public init() {
+        
+    }
+    open func getFrameImages(trimView: DUTrimVideoView , atRange: ClosedRange<Double>) -> [UIImage]
+    {
+        var imgArray = [UIImage]()
+        let asset = trimView.asset!
+        let assetImgGenerate : AVAssetImageGenerator    = AVAssetImageGenerator(asset: asset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        assetImgGenerate.requestedTimeToleranceAfter    = CMTime.zero;
+        assetImgGenerate.requestedTimeToleranceBefore   = CMTime.zero;
+        
+        
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        let thumbTime: CMTime = asset.duration
+        let thumbtimeSeconds  = Int(CMTimeGetSeconds(thumbTime))
+        let maxLength         = "\(thumbtimeSeconds)" as NSString
+
+        let thumbAvg  = thumbtimeSeconds/6
+        var startTime = 1
+        let numberOFFrames = self.numberOfFrames(trimView: trimView)
+        //loop for 6 number of frames
+        for _ in 0...numberOFFrames
+        {
+          
+          
+          do {
+            let time:CMTime = CMTimeMakeWithSeconds(Float64(startTime),preferredTimescale: Int32(maxLength.length))
+            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            let image = UIImage(cgImage: img)
+            imgArray.append(image)
+          }
+            
+          catch
+            _ as NSError
+          {
+            print("Image generation failed with error (error)")
+          }
+          
+          startTime = startTime + thumbAvg
+            
+        }
+        return imgArray
+    }
+    
+    open func  numberOfFrames ( trimView: DUTrimVideoView)-> Int
+    {
+        return 5
+    }
+}
+
 public class DUTrimVideoView : UIView  {
     var asset : AVAsset!
     var imageFrameView : UIView!
     public var rangeSlider: DURangeSlider!
     public var delegate : VideoTrimViewDelegate?
+    public var viewModel : DUTrimVideoViewViewModel!
     fileprivate func snapToSuperview(_ child: UIView) {
         child.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -28,10 +85,10 @@ public class DUTrimVideoView : UIView  {
         ])
     }
     
-    public init(asset:AVAsset,frame:CGRect) {
+    public init(asset:AVAsset,frame:CGRect,viewModel: DUTrimVideoViewViewModel = DefaultDUTrimVideoViewViewModel()) {
         super.init(frame: frame)
         self.asset = asset
-        
+        self.viewModel = viewModel
         imageFrameView = UIView()
         addSubview(imageFrameView)
         snapToSuperview(imageFrameView)
@@ -82,11 +139,11 @@ public class DUTrimVideoView : UIView  {
       //creating assets
      
 //      let maxLength         = "\(thumbtimeSeconds)" as NSString
-    guard  let delegate = delegate , let asset = asset else {
+    guard  let asset = asset else {
         return
     }
        var startXPosition:CGFloat = 0.0
-       let frames = delegate.getFrameImages(trimView: self, atRange: 0.0 ... asset.duration.seconds)
+       let frames = viewModel.getFrameImages(trimView: self, atRange: 0.0 ... asset.duration.seconds)
       //loop for 6 number of frames
       for i in 0..<frames.count
       {
@@ -109,51 +166,4 @@ public class DUTrimVideoView : UIView  {
 
 
 
-extension VideoTrimViewDelegate {
-    func getFrameImages(trimView: DUTrimVideoView , atRange: ClosedRange<Double>) -> [UIImage]
-    {
-        var imgArray = [UIImage]()
-        let asset = trimView.asset!
-        let assetImgGenerate : AVAssetImageGenerator    = AVAssetImageGenerator(asset: asset)
-        assetImgGenerate.appliesPreferredTrackTransform = true
-        assetImgGenerate.requestedTimeToleranceAfter    = CMTime.zero;
-        assetImgGenerate.requestedTimeToleranceBefore   = CMTime.zero;
-        
-        
-        assetImgGenerate.appliesPreferredTrackTransform = true
-        let thumbTime: CMTime = asset.duration
-        let thumbtimeSeconds  = Int(CMTimeGetSeconds(thumbTime))
-        let maxLength         = "\(thumbtimeSeconds)" as NSString
 
-        let thumbAvg  = thumbtimeSeconds/6
-        var startTime = 1
-        let numberOFFrames = self.numberOfFrames(trimView: trimView)
-        //loop for 6 number of frames
-        for _ in 0...numberOFFrames
-        {
-          
-          
-          do {
-            let time:CMTime = CMTimeMakeWithSeconds(Float64(startTime),preferredTimescale: Int32(maxLength.length))
-            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
-            let image = UIImage(cgImage: img)
-            imgArray.append(image)
-          }
-            
-          catch
-            _ as NSError
-          {
-            print("Image generation failed with error (error)")
-          }
-          
-          startTime = startTime + thumbAvg
-            
-        }
-        return []
-    }
-    
-    func  numberOfFrames ( trimView: DUTrimVideoView)-> Int
-    {
-        return 5
-    }
-}
