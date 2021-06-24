@@ -98,10 +98,18 @@ public class DUTrimVideoView : UIView  {
         imageFrameView.layer.borderColor  = UIColor.white.cgColor
         imageFrameView.layer.masksToBounds = true
 
-      createRangeSlider()
+        createRangeSlider()
         
         
     }
+    open func recreateRangeSlider() {
+        rangeSlider.removeFromSuperview()
+        imageFrameView.removeFromSuperview()
+        addSubview(imageFrameView)
+        snapToSuperview(imageFrameView)
+        createRangeSlider()
+    }
+    
     func createRangeSlider()
     {
      
