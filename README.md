@@ -1,5 +1,8 @@
 # DUTrimVideoView
 # example
+
+
+```
 class ViewController: UIViewController,VideoTrimViewDelegate {
     func rangeSliderValueChanged(trimView: DUTrimVideoView, rangeSlider: DURangeSlider) {
         
@@ -36,3 +39,4 @@ class ViewController: UIViewController,VideoTrimViewDelegate {
 
 
 }
+```
