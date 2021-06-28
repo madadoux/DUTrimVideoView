@@ -119,8 +119,6 @@ public class DUTrimVideoView : UIView  {
 
       snapToSuperview(rangeSlider)
 
-      rangeSlider.leftThumbImage = UIImage(named: "left")
-      rangeSlider.rightThumbImage = UIImage(named: "right")
       rangeSlider.trackBorderTintColor = .white
       rangeSlider.trackBorderWidth = 4.0
       rangeSlider.tag = 1000
