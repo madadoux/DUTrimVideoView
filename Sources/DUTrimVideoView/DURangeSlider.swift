@@ -286,6 +286,7 @@ public class DURangeSlider: UIControl {
     }
   
     fileprivate func initializeLayers() {
+        self.clipsToBounds = false
         layer.backgroundColor = UIColor.clear.cgColor
         trackLayer.rangeSlider = self
         trackLayer.contentsScale = UIScreen.main.scale
@@ -330,10 +331,10 @@ public class DURangeSlider: UIControl {
          let val =  Double(bounds.width - thumbWidth) * (value - minimumValue) /
             (maximumValue - minimumValue) + Double(thumbWidth/2.0)
         if  value == minimumValue {
-           return val - Double(thumbWidth/2.0)
+           return val - Double(thumbWidth/4.0)
         }
         else if value == maximumValue {
-            return val + Double(thumbWidth/2.0)
+            return val + Double(thumbWidth/4.0)
         }
         return val
     }
@@ -351,8 +352,11 @@ public class DURangeSlider: UIControl {
         // Hit test the thumb layers
         if lowerThumbLayer.frame.contains(previouslocation) {
             lowerThumbLayer.highlighted = true
+            print("lower")
+
         } else if upperThumbLayer.frame.contains(previouslocation) {
             upperThumbLayer.highlighted = true
+            print("upper")
         }
         else if playerPostionLayer.frame.contains(previouslocation) {
             playerPostionLayer.highlighted = true

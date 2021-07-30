@@ -75,11 +75,11 @@ public class DUTrimVideoView : UIView  {
     public var rangeSlider: DURangeSlider!
     public var delegate : VideoTrimViewDelegate?
     public var viewModel : DUTrimVideoViewViewModel!
-    fileprivate func snapToSuperview(_ child: UIView) {
+    fileprivate func snapToSuperview(_ child: UIView, constant: CGFloat) {
         child.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            child.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            child.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            child.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: constant),
+            child.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -constant),
             child.topAnchor.constraint(equalTo: self.topAnchor),
             child.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
@@ -91,8 +91,8 @@ public class DUTrimVideoView : UIView  {
         self.viewModel = viewModel
         imageFrameView = UIView()
         addSubview(imageFrameView)
-        snapToSuperview(imageFrameView)
-        
+        snapToSuperview(imageFrameView, constant: 10)
+
         imageFrameView.layer.cornerRadius = 5.0
         imageFrameView.layer.borderWidth  = 1.0
         imageFrameView.layer.borderColor  = UIColor.white.cgColor
@@ -106,7 +106,7 @@ public class DUTrimVideoView : UIView  {
         rangeSlider.removeFromSuperview()
         imageFrameView.removeFromSuperview()
         addSubview(imageFrameView)
-        snapToSuperview(imageFrameView)
+        snapToSuperview(imageFrameView, constant: self.rangeSlider.thumbWidth/2)
         createRangeSlider()
     }
     
@@ -117,7 +117,7 @@ public class DUTrimVideoView : UIView  {
       rangeSlider = DURangeSlider()
       self.addSubview(rangeSlider)
 
-      snapToSuperview(rangeSlider)
+        snapToSuperview(rangeSlider, constant: 0)
 
       rangeSlider.trackBorderTintColor = .white
       rangeSlider.trackBorderWidth = 4.0
